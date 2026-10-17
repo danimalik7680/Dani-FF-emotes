@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Danish FF Emote Panel</title>
+<style>
+:root{--bg:#090d18;--panel:#121a2b;--line:#293653;--gold:#ffbd3d;--cyan:#54e7ff;--muted:#a9b6ce}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top,#1b2d4c 0,#090d18 55%);color:#f6f8ff;min-height:100vh;padding:18px}
+.wrap{max-width:720px;margin:auto}
+header{text-align:center;padding:18px 10px 22px}
+.logo{display:inline-grid;place-items:center;width:62px;height:62px;border:2px solid var(--gold);border-radius:18px;color:var(--gold);font-weight:900;font-size:25px;box-shadow:0 0 24px #ffbd3d25}
+h1{font-size:clamp(25px,6vw,38px);margin:12px 0 6px;letter-spacing:1px}
+h1 span{color:var(--gold)}
+.sub{color:var(--muted);font-size:14px}
+.card{background:linear-gradient(145deg,#151f33,#0e1524);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 12px 35px #0003}
+h2{font-size:16px;margin:0 0 14px;color:var(--cyan);letter-spacing:.5px}
+label{display:block;font-size:13px;color:#dbe5f7;margin:12px 0 7px}
+input,select{width:100%;padding:14px;border:1px solid #334362;border-radius:11px;background:#080f1d;color:#fff;font-size:16px;outline:none}
+input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #54e7ff18}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.emotes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.emote-card{border:1px solid #30405f;border-radius:13px;background:#0b1322;padding:9px;display:flex;flex-direction:column;gap:8px}
+.emote{padding:8px 4px;border:1px solid transparent;border-radius:9px;background:transparent;color:white;text-align:center;cursor:pointer;min-height:72px;font-size:14px}
+.emote .emoji{font-size:25px;display:block;margin-bottom:7px}
+.emote small{color:var(--muted)}
+.emote.selected{border-color:var(--gold);background:#302513;box-shadow:inset 0 0 0 1px #ffbd3d55}
+button.emote-send{width:100%;border:0;border-radius:9px;padding:10px 6px;background:linear-gradient(90deg,#ffbd3d,#ff7b32);color:#17110a;font-weight:900;font-size:12px;cursor:pointer}
+button.emote-send:active{transform:scale(.99)}
+button.send{width:100%;margin-top:16px;border:0;border-radius:12px;padding:16px;background:linear-gradient(90deg,#ffbd3d,#ff7b32);color:#17110a;font-weight:900;font-size:16px;letter-spacing:.4px;cursor:pointer}
+button.send:active{transform:scale(.99)}
+.notice{font-size:12px;color:var(--muted);line-height:1.5;margin:12px 2px 0}
+#status{display:none;padding:12px;border-radius:10px;margin-top:12px;background:#14283a;border:1px solid #2d6176;color:#c8f5ff;font-size:13px;line-height:1.5}
+footer{text-align:center;color:#71809b;font-size:12px;padding:12px}
+@media(min-width:560px){.emotes{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">DF</div>
+  <h1>DANISH <span>FF</span></h1>
+  <div class="sub">EMOTE PANEL · DEMO WEBSITE</div>
+</header>
+<section class="card">
+  <h2>01 / PLAYER DETAILS</h2>
+  <label for="uid">Player UID</label>
+  <input id="uid" inputmode="numeric" autocomplete="off" placeholder="Enter player UID">
+  <label for="team">Team Code</label>
+  <input id="team" autocomplete="off" placeholder="Enter Team Code">
+</section>
+<section class="card">
+  <h2>02 / SELECT EMOTE</h2>
+  <div class="emotes" id="emotes">
+    <div class="emote-card"><button class="emote selected" type="button" data-name="Dance"><span class="emoji">💃</span>Dance<br><small>Emote 01</small></button><button class="emote-send" type="button" data-send="Dance">SEND ↗</button></div>
+    <div class="emote-card"><button class="emote" type="button" data-name="Booyah"><span class="emoji">🏆</span>Booyah<br><small>Emote 02</small></button><button class="emote-send" type="button" data-send="Booyah">SEND ↗</button></div>
+    <div class="emote-card"><button class="emote" type="button" data-name="Laugh"><span class="emoji">😂</span>Laugh<br><small>Emote 03</small></button><button class="emote-send" type="button" data-send="Laugh">SEND ↗</button></div>
+    <div class="emote-card"><button class="emote" type="button" data-name="Flex"><span class="emoji">💪</span>Flex<br><small>Emote 04</small></button><button class="emote-send" type="button" data-send="Flex">SEND ↗</button></div>
+  </div>
+  <div id="status" role="status" aria-live="polite"></div>
+  <p class="notice">Demo only: this page does not connect to Free Fire or send emotes. A real integration would require a verified, authorized service. Never enter your game password or account security codes on unofficial websites.</p>
+</section>
+<footer>© Danish FF Panel · Fan-made demo interface</footer>
+</div>
+<script>
+let chosen = "Dance";
+const status = document.getElementById("status");
+document.querySelectorAll(".emote").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".emote").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    chosen = btn.dataset.name;
+  });
+});
+document.querySelectorAll(".emote-send").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const uid = document.getElementById("uid").value.trim();
+    const team = document.getElementById("team").value.trim();
+    const emote = btn.dataset.send;
+    status.style.display = "block";
+    if (!uid || !team) {
+      status.textContent = "Please enter both Player UID and Team Code to preview this demo request.";
+      return;
+    }
+    status.textContent = "Demo only: “" + emote + "” selected for UID " + uid + ". No request was sent to Free Fire; this page is not connected to the game.";
+  });
+});
+</script>
+</body>
+</html>
